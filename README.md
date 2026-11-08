@@ -1,66 +1,52 @@
 # super-agent
 
-Test repository for the [dsh-superagent](https://github.com/deepseek-ai/dsh-superagent-prototype)
-research prototype, running as an independent profile of the local
-[DeepSeek Harness](https://www.deepseek.com/en/harness/) (DSH) client.
+**中文** | [English](README.en.md)
 
-The agent uses the local DSH home and model credentials, but runs in its own `superagent`
-profile with its own process and state directory. It can restart and upgrade without
-closing the operator's Sessions, and the `desktop` profile is left untouched. The
-prototype is research code, not a production-ready product.
+这是 [dsh-superagent](https://github.com/deepseek-ai/dsh-superagent-prototype) 研究原型的测试仓库。该原型作为本机 [DeepSeek Harness](https://www.deepseek.com/en/harness/)（DSH）客户端的一个独立 profile 运行。
 
-| Item | Value |
+Agent 使用本机 DSH home 和模型凭据，但运行在独立的 `superagent` profile 中，拥有自己的进程和状态目录。它可以在不关闭操作者 Session 的情况下重启和升级，`desktop` profile 不受影响。该原型是研究代码，不是可投入生产的产品。
+
+| 项 | 值 |
 | --- | --- |
-| Agent account | `@arvin00000001` (comments, branches and pull requests are written under this account) |
-| Operator | `@arvin-xiao` |
-| Repository | `arvin-xiao/super-agent` |
-| DSH profile | `superagent`, a separate copy of the Web profile |
-| Panel | `http://127.0.0.1:3082` (the startup URL carries a token) |
-| State directory | `~/.dsh/state/superagent` |
+| Agent 账号 | `@arvin00000001`（评论、分支和 PR 都以该账号发出） |
+| 操作者 | `@arvin-xiao` |
+| 仓库 | `arvin-xiao/super-agent` |
+| DSH profile | `superagent`，Web profile 的独立副本 |
+| 面板 | `http://127.0.0.1:3082`（启动 URL 带 token） |
+| 状态目录 | `~/.dsh/state/superagent` |
 
-Work arrives when an account on the allowed list mentions the agent in an Issue or comment:
+当允许列表中的账号在 Issue 或评论中 @ Agent 时，工作就会到来：
 
 ```text
 @arvin00000001 add a file called HELLO.md with the text Hello Super-agent
 ```
 
-Within about a minute the request appears as a Ticket in the **Superagent** panel. The
-agent works in its own checkout and answers in the original conversation, usually with a
-pull request.
+大约一分钟后，请求会作为 Ticket 出现在 **Superagent** 面板中。Agent 在自己的 checkout 中工作，并在原对话中回复，通常是一个 PR。
 
-## Set up from the local DSH client
+## 基于本地 DSH 客户端搭建
 
-These steps reproduce this installation on a local DSH client. The prototype's
-[deployment guide](https://github.com/deepseek-ai/dsh-superagent-prototype/blob/main/docs/006-deployment.md)
-is the full reference for every setting, and its
-[agent-driven setup](https://github.com/deepseek-ai/dsh-superagent-prototype/blob/main/SETUP.md)
-is an alternative that asks one question at a time.
+以下步骤说明如何在本机 DSH 客户端上复现这套安装。原型仓库的[部署指南](https://github.com/deepseek-ai/dsh-superagent-prototype/blob/main/docs/006-deployment.md)是各项设置的完整参考；它的[由 Agent 执行的安装流程](https://github.com/deepseek-ai/dsh-superagent-prototype/blob/main/SETUP.md)是另一种选择，会一次问一个问题。
 
-### Prerequisites
+### 前置条件
 
-- Node.js 22.19+ or 24+, pnpm, git 2.32+, Python 3.8+ and GitHub CLI (`gh`) 2.48+
-- A DSH client installation with a model provider configured; the new profile reuses the
-  model credentials in the local DSH home
-- `tmux` only if you use the bundled `scripts/dsh-superagent` service instead of running
-  `dsh` directly
-- A github.com repository, and a dedicated GitHub agent account with write access to it.
-  GitHub Enterprise Server is not supported.
-- Optional: a Feishu/Lark app with a bot and `lark-cli` for chat requests
+- Node.js 22.19+ 或 24+、pnpm、git 2.32+、Python 3.8+ 和 GitHub CLI（`gh`）2.48+
+- 已安装 DSH 客户端并配置模型提供方；新 profile 复用本机 DSH home 中的模型凭据
+- 仅在使用仓库自带的 `scripts/dsh-superagent` 托管服务（而不是直接运行 `dsh`）时需要 `tmux`
+- 一个 github.com 仓库，以及一个对该仓库有写权限的专用 GitHub Agent 账号。不支持 GitHub Enterprise Server。
+- 可选：带机器人的 Feishu/Lark 应用和 `lark-cli`，用于处理聊天请求
 
-### 1. Install the DSH CLI
+### 1. 安装 DSH CLI
 
-The `dsh` command creates and boots the profile. Install a version within the prototype's
-`engines.dsh` range (`^0.2.1-alpha.2`); this installation uses `0.2.1-rc.3`:
+`dsh` 命令负责创建并启动 profile。请安装原型 `engines.dsh` 范围（`^0.2.1-alpha.2`）内的版本；本安装使用 `0.2.1-rc.3`：
 
 ```sh
 npm install -g @deepseek-ai/dsh@0.2.1-rc.3
 dsh --version
 ```
 
-The CLI uses `~/.dsh` (set `DSH_HOME` to use another directory), the same home as the
-desktop client.
+CLI 使用 `~/.dsh`（可用 `DSH_HOME` 指定其他目录），与桌面客户端共用同一个 home。
 
-### 2. Build the prototype
+### 2. 构建原型
 
 ```sh
 git clone https://github.com/deepseek-ai/dsh-superagent-prototype.git ~/src/dsh-superagent
@@ -69,27 +55,22 @@ pnpm install
 pnpm build
 ```
 
-`pnpm check` runs the typecheck, the tests and the build if you want to verify the
-checkout.
+`pnpm check` 会运行类型检查、测试和构建，可用于验证 checkout。
 
-### 3. Create the `superagent` profile
+### 3. 创建 `superagent` profile
 
 ```sh
 dsh superagent --from-default-profile web --dump-config > /dev/null
 dsh plugin --profile superagent add "link:$PWD"
 ```
 
-The first command creates `~/.dsh/profiles/superagent` from the shipped Web template and
-prints the composed configuration. The second adds this checkout as the profile's
-`dsh-superagent` bundle. Run the first command only for a new installation: it replaces an
-existing profile and deletes its `cordis.patch.yml`.
+第一条命令从内置 Web 模板创建 `~/.dsh/profiles/superagent`，并打印组合后的配置。第二条命令把当前 checkout 作为 profile 的 `dsh-superagent` bundle 安装进去。第一条命令只用于全新安装：它会替换已有 profile 并删除其 `cordis.patch.yml`。
 
-The profile is separate because the bundle changes process-wide `PATH` and git settings
-for its Sessions, and it needs independent restarts and upgrades.
+单独使用一个 profile 是因为该 bundle 会改变其 Session 的进程级 `PATH` 和 git 设置，而且需要独立重启和升级。
 
-### 4. Configure the profile
+### 4. 配置 profile
 
-Replace `~/.dsh/profiles/superagent/cordis.patch.yml` with:
+将 `~/.dsh/profiles/superagent/cordis.patch.yml` 替换为：
 
 ```yaml
 # superagent profile: dsh-superagent panel configuration.
@@ -105,22 +86,13 @@ Replace `~/.dsh/profiles/superagent/cordis.patch.yml` with:
 #   disabled: false
 ```
 
-- Replace `/Users/me` with your home directory. `stateDir` must be an absolute path; it
-  holds the database, the worker command shims and git configuration, and by default the
-  Ticket checkouts. Back it up before upgrades.
-- Change `port` if 3082 is taken, and pass the matching URL to the service script,
-  for example `--url http://127.0.0.1:3083`.
-- The copied Web profile uses the model credentials in the local DSH home and the Web
-  template's default model. To choose another provider or model for this profile only,
-  add an `agent-default-model` entry with `provider`, `model` and optional
-  `reasoningEffort` keys.
+- 把 `/Users/me` 换成你的 home 目录。`stateDir` 必须是绝对路径；它保存数据库、worker 命令 shim 和 git 配置，默认还保存 Ticket checkout。升级前请备份。
+- 如果 3082 被占用，请修改 `port`，并把对应 URL 传给服务脚本，例如 `--url http://127.0.0.1:3083`。
+- 复制来的 Web profile 使用本机 DSH home 中的模型凭据和 Web 模板的默认模型。若只想为该 profile 选择其他 provider 或模型，可添加一个 `agent-default-model` 条目，包含 `provider`、`model` 和可选的 `reasoningEffort` 键。
 
-### 5. Sign in the agent's GitHub CLI
+### 5. 登录 Agent 的 GitHub CLI
 
-The agent acts as its own GitHub account, never the operator's. Create a dedicated
-account, invite it as a collaborator with write access to the repository, accept the
-invitation while signed in as the agent, and give it a `gh` configuration separate from
-yours:
+Agent 使用自己的 GitHub 账号，绝不使用操作者的账号。创建一个专用账号，以写权限邀请它为仓库协作者，在登录 Agent 账号的状态下接受邀请，然后为它配置独立的 `gh` 配置：
 
 ```sh
 mkdir -p ~/.local/bin
@@ -133,124 +105,91 @@ gh-agent auth login
 gh-agent api user --jq .login   # must print the agent login
 ```
 
-### 6. Start the panel
+### 6. 启动面板
 
-From the checkout, boot the new profile with the local DSH client:
+在 checkout 中，用本机 DSH 客户端启动新 profile：
 
 ```sh
 dsh --profile superagent --no-open
 ```
 
-The process prints `dsh web: http://127.0.0.1:3082/?token=…`. Open that URL in the browser
-(a new token is generated on each start) and choose **Superagent** in the sidebar. Stop
-the process with Ctrl-C.
+进程会打印 `dsh web: http://127.0.0.1:3082/?token=…`。在浏览器中打开该 URL（每次启动都会生成新 token），然后在侧边栏选择 **Superagent**。按 Ctrl-C 停止进程。
 
-For a managed background service, use the bundled script; it requires `tmux`:
+如需后台托管服务，可使用仓库自带脚本；它需要 `tmux`：
 
 ```sh
 scripts/dsh-superagent start
 scripts/dsh-superagent status
 ```
 
-`start` runs `dsh --profile superagent` in tmux session `dsh-superagent`, waits for the
-runtime to answer, and prints the log file with the panel URL. `status` exits 0 when the
-service is healthy, 1 when it is down, duplicated, unreachable or reporting a runtime
-error, 2 when a component such as a Source reports an error, and 3 when setup still waits
-for a person. `stop` and `restart` shut down gracefully.
+`start` 会在 tmux 会话 `dsh-superagent` 中运行 `dsh --profile superagent`，等待 runtime 就绪，并打印带有面板 URL 的日志文件。`status` 的退出码：0 表示服务健康；1 表示服务未运行、重复运行、不可达或 runtime 报错；2 表示某个组件（例如 Source）报错；3 表示仍在等待人工完成设置。`stop` 和 `restart` 会优雅关闭。
 
-### 7. Connect the repository in the panel
+### 7. 在面板中接入仓库
 
-Until these settings are saved, setup reports a problem on Overview and no request can
-become a Ticket:
+在保存这些设置之前，Overview 会显示设置问题，任何请求都无法成为 Ticket：
 
-1. **Settings → Sources → GitHub**: repository `owner/name`, here
-   `arvin-xiao/super-agent`, and the agent CLI path, for example
-   `/Users/me/.local/bin/gh-agent`.
-2. **Settings → Eval → On each Source**: the GitHub logins that may ask for work, here
-   `arvin-xiao`. The list starts empty, and no request is accepted while it is empty.
-3. **Settings → Execution**: a directory root for Ticket checkouts, for example
-   `~/src/super-agent-tickets`, and a prepare command. This installation gives each
-   Ticket a fresh clone:
+1. **Settings → Sources → GitHub**：仓库 `owner/name`（这里是 `arvin-xiao/super-agent`），以及 Agent CLI 路径，例如 `/Users/me/.local/bin/gh-agent`。
+2. **Settings → Eval → On each Source**：允许发起工作的 GitHub 登录名，这里是 `arvin-xiao`。列表初始为空；列表为空时不会接受任何请求。
+3. **Settings → Execution**：Ticket checkout 的目录根，例如 `~/src/super-agent-tickets`，以及 prepare 命令。本安装为每个 Ticket 新建一份 clone：
 
    ```sh
    git clone "https://github.com/$DSH_SUPERAGENT_GITHUB_REPOSITORY.git" "$DSH_SUPERAGENT_DIR"
    ```
 
-   The host sets `$DSH_SUPERAGENT_GITHUB_REPOSITORY` and `$DSH_SUPERAGENT_DIR`. Use
-   absolute paths in the directory root. For a large repository, fetch into one shared
-   clone and add a worktree instead; the deployment guide has that command.
+   Host 会设置 `$DSH_SUPERAGENT_GITHUB_REPOSITORY` 和 `$DSH_SUPERAGENT_DIR`。目录根请使用绝对路径。如果仓库很大，也可以 clone 一份共享仓库并添加 worktree；部署指南中有对应命令。
 
-4. **Settings → Prompts**: the team sections, including the commit author, the GitHub
-   disclosure line and the auto-merge condition. Keep auto-merge off until the agent's
-   pull requests have been right for a while.
-5. Optional Feishu: configure the bot CLI and chats as described in the deployment guide,
-   then enable the `dsh-superagent-feishu` entry in the profile configuration.
+4. **Settings → Prompts**：团队提示词，包括提交作者、GitHub 披露行和 auto-merge 条件。在 Agent 的 PR 稳定可靠之前，请保持关闭 auto-merge。
+5. 可选 Feishu：按部署指南配置 bot CLI 与聊天，然后在 profile 配置中启用 `dsh-superagent-feishu` 条目。
 
-Some saves restart the application; wait until the panel answers again before the next
-change. The Overview setup card links to whatever is still missing.
+部分保存会重启应用；等面板恢复响应后再做下一次修改。Overview 的设置卡片会链接到仍缺少的配置。
 
-### 8. Verify the setup
+### 8. 验证搭建
 
 ```sh
 scripts/dsh-superagent status   # exits 0 when setup is complete
 ```
 
-Then, from an allowed account, comment on an Issue:
+然后，用允许列表中的账号在 Issue 中评论：
 
 ```text
 @arvin00000001 add a file called HELLO.md with the text Hello Super-agent
 ```
 
-Within a polling interval (60 seconds by default) the Ticket appears in the panel, and the
-agent acknowledges it in the thread.
+在一个轮询周期内（默认 60 秒），Ticket 会出现在面板中，Agent 会在该线程中确认收到。
 
-## Operate
+## 运维
 
-- **Panel**: open the startup URL; **Superagent** is in the sidebar. The management API
-  answers under `http://127.0.0.1:3082/orchestrator/api/` when the
-  `x-orchestrator-request: 1` header is present.
-- **Logs**: `scripts/dsh-superagent` writes `.artifacts/dsh-superagent-<profile>-<date>-<time>-<pid>.log`
-  and keeps the newest 20. When running `dsh` directly, the process prints the same
-  information to its terminal.
-- **Upgrade**: wait until no Executor is in the middle of a turn, back up
-  `<stateDir>/orchestrator.sqlite`, run `git pull && pnpm install && pnpm build`, then
-  restart and inspect `status`. A database migrated by a newer version cannot be opened
-  by an older one.
-- **Security**: Sessions run with `danger-full-access` as the operator's OS user and can
-  read the home directory. For isolation, run the service as a dedicated OS account that
-  holds only the agent's credentials.
+- **面板**：打开启动 URL；侧边栏中有 **Superagent**。管理 API 位于 `http://127.0.0.1:3082/orchestrator/api/`，请求需要带 `x-orchestrator-request: 1` 头。
+- **日志**：`scripts/dsh-superagent` 会写入 `.artifacts/dsh-superagent-<profile>-<date>-<time>-<pid>.log`，并保留最新 20 个文件。直接运行 `dsh` 时，同样的信息会打印在终端。
+- **升级**：等待没有 Executor 正在执行一轮工作，备份 `<stateDir>/orchestrator.sqlite`，运行 `git pull && pnpm install && pnpm build`，然后重启并检查 `status`。被新版本迁移过的数据库无法由旧版本打开。
+- **安全**：Session 以操作者的 OS 用户身份、`danger-full-access` 权限运行，可以读取 home 目录。若需隔离，请用只保存 Agent 凭据的专用 OS 账号运行服务。
 
-## Troubleshooting
+## 故障排查
 
-| Symptom | Fix |
+| 现象 | 处理 |
 | --- | --- |
-| `The GitHub Source names no repository.` | Set `owner/name` on Settings → Sources → GitHub |
-| The agent GitHub CLI was not found or cannot read its account | Check the wrapper path; run `gh-agent auth login` |
-| `@… cannot push to …` | Give the agent account write access to the repository |
-| A Ticket fails with `The prepare command failed` | The error output names the cause; fix the command and retry the Ticket |
-| `status` exits 3 | The service runs and waits for setup; Overview names the missing setting |
+| `The GitHub Source names no repository.` | 在 Settings → Sources → GitHub 设置 `owner/name` |
+| 找不到 Agent 的 GitHub CLI，或无法读取其账号 | 检查 wrapper 路径；运行 `gh-agent auth login` |
+| `@… cannot push to …` | 给 Agent 账号该仓库的写权限 |
+| Ticket 失败并提示 `The prepare command failed` | 错误输出会说明原因；修正命令后重试 Ticket |
+| `status` 退出码 3 | 服务正在运行但在等待设置；Overview 会指明缺少哪项设置 |
 
-The deployment guide's Troubleshooting section covers the remaining setup and runtime
-errors.
+部署指南的 Troubleshooting 一节覆盖其余设置与运行时错误。
 
-## Uninstall
+## 卸载
 
-Stop the service first, then remove the bundle and the profile's state:
+先停止服务，然后移除 bundle 和 profile 状态：
 
 ```sh
 dsh plugin --profile superagent remove dsh-superagent
 rm -rf ~/.dsh/profiles/superagent ~/.dsh/state/superagent
 ```
 
-`npm uninstall -g @deepseek-ai/dsh` removes the CLI only when nothing else uses it.
+`npm uninstall -g @deepseek-ai/dsh` 只在没有其他用途时移除 CLI。
 
-## Documentation
+## 文档
 
-- [Deployment](https://github.com/deepseek-ai/dsh-superagent-prototype/blob/main/docs/006-deployment.md):
-  every setting, setup check and troubleshooting entry
-- [Panel](https://github.com/deepseek-ai/dsh-superagent-prototype/blob/main/docs/005-panel.md):
-  the pages and what they show
-- [Philosophy](https://github.com/deepseek-ai/dsh-superagent-prototype/blob/main/docs/000-philosophy.md):
-  the attention principle the agent follows
-- [Agent-driven setup](https://github.com/deepseek-ai/dsh-superagent-prototype/blob/main/SETUP.md):
-  the setup procedure the prototype asks a coding agent to run
+- [部署](https://github.com/deepseek-ai/dsh-superagent-prototype/blob/main/docs/006-deployment.md)：所有设置、启动检查与故障排查条目
+- [面板](https://github.com/deepseek-ai/dsh-superagent-prototype/blob/main/docs/005-panel.md)：各个页面及其展示内容
+- [理念](https://github.com/deepseek-ai/dsh-superagent-prototype/blob/main/docs/000-philosophy.md)：Agent 遵循的注意力原则
+- [由 Agent 执行的安装流程](https://github.com/deepseek-ai/dsh-superagent-prototype/blob/main/SETUP.md)：原型要求编码 Agent 执行的安装步骤
